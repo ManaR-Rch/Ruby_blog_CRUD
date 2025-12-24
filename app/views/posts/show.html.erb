@@ -1,0 +1,22 @@
+<h1><%= @post.title %></h1>
+<p><strong>By <%= @post.user.name %></strong></p>
+<p><%= @post.body %></p>
+<p>Published: <%= time_ago_in_words(@post.published_at || @post.created_at) %> ago</p>
+
+<h2>Comments (<%= @post.comments_count %>)</h2>
+<div id="comments">
+  <% if @post.comments.any? %>
+    <% @post.comments.order(created_at: :desc).each do |comment| %>
+      <%= render "comments/comment", comment: comment %>
+    <% end %>
+  <% else %>
+    <p>No comments yet.</p>
+  <% end %>
+</div>
+
+<h3>Add a Comment</h3>
+<%= render "comments/form" %>
+
+<%= link_to "Edit", edit_post_path(@post) %> |
+<%= link_to "Back", posts_path %> |
+<%= button_to "Delete", @post, method: :delete, data: { confirm: "Are you sure?" } %>

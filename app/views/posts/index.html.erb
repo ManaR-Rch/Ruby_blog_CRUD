@@ -1,0 +1,28 @@
+<h1>All Posts</h1>
+
+<div style="margin-bottom: 20px;">
+  <%= form_with url: posts_path, method: :get, local: true do |f| %>
+    <div style="margin-bottom: 10px;">
+      <%= f.label :status, "Status:" %>
+      <%= f.select :status, [["All", ""], ["Published", "published"], ["Drafts", "drafts"]], { include_blank: false }, style: "margin-right: 10px;" %>
+    </div>
+
+    <div style="margin-bottom: 10px;">
+      <%= f.label :q, "Search:" %>
+      <%= f.text_field :q, placeholder: "Search posts...", style: "margin-right: 10px;" %>
+    </div>
+
+    <div style="margin-bottom: 10px;">
+      <%= f.label :author_id, "Author ID:" %>
+      <%= f.text_field :author_id, placeholder: "Filter by author...", style: "margin-right: 10px;" %>
+    </div>
+
+    <%= f.submit "Filter" %>
+  <% end %>
+</div>
+
+<%= link_to "New Post", new_post_path %>
+
+<% @posts.each do |post| %>
+  <%= render post %>
+<% end %>

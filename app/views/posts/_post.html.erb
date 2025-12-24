@@ -1,0 +1,7 @@
+<div>
+  <h2><%= link_to post.title, post %></h2>
+  <p><strong>By <%= post.user.name %></strong></p>
+  <p><%= truncate(post.body, length: 100) %></p>
+  <p><%= time_ago_in_words(post.published_at || post.created_at) %> ago</p>
+  <p><strong>Comments: <%= post.comments_count %></strong></p>
+</div>
