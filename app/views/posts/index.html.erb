@@ -1,28 +1,45 @@
-<h1>All Posts</h1>
+<div class="max-w-7xl mx-auto px-4 py-8">
+  <!-- Header with Title and Create Button -->
+  <div class="flex justify-between items-center mb-8">
+    <h1 class="text-3xl font-bold text-gray-800">All Posts</h1>
+    <%= link_to new_post_path, class: "bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 px-5 rounded-lg transition shadow-sm", data: { turbo_frame: "posts" } do %>
+      <span class="text-sm">+ New Post</span>
+    <% end %>
+  </div>
 
-<div style="margin-bottom: 20px;">
-  <%= form_with url: posts_path, method: :get, local: true do |f| %>
-    <div style="margin-bottom: 10px;">
-      <%= f.label :status, "Status:" %>
-      <%= f.select :status, [["All", ""], ["Published", "published"], ["Drafts", "drafts"]], { include_blank: false }, style: "margin-right: 10px;" %>
+  <!-- Simplified Filter Card -->
+  <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-8">
+    <%= form_with url: posts_path, method: :get, local: true, data: { controller: "filter", action: "change->filter#change" } do |f| %>
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <!-- Search Field -->
+        <div class="md:col-span-2">
+          <%= f.text_field :q, 
+              placeholder: "Search posts...", 
+              class: "w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" %>
+        </div>
+
+        <!-- Status Dropdown -->
+        <div>
+          <%= f.select :status, 
+              [["All Posts", ""], ["Published", "published"], ["Drafts", "drafts"]], 
+              { include_blank: false }, 
+              class: "w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" %>
+        </div>
+
+        <!-- Filter Button (hidden, form submits automatically) -->
+        <div class="hidden">
+          <%= f.submit "Filter" %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
+  <!-- Posts Grid with Turbo Frame -->
+  <turbo-frame id="posts">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <% @posts.each do |post| %>
+        <%= render post %>
+      <% end %>
     </div>
-
-    <div style="margin-bottom: 10px;">
-      <%= f.label :q, "Search:" %>
-      <%= f.text_field :q, placeholder: "Search posts...", style: "margin-right: 10px;" %>
-    </div>
-
-    <div style="margin-bottom: 10px;">
-      <%= f.label :author_id, "Author ID:" %>
-      <%= f.text_field :author_id, placeholder: "Filter by author...", style: "margin-right: 10px;" %>
-    </div>
-
-    <%= f.submit "Filter" %>
-  <% end %>
+  </turbo-frame>
 </div>
-
-<%= link_to "New Post", new_post_path %>
-
-<% @posts.each do |post| %>
-  <%= render post %>
-<% end %>
