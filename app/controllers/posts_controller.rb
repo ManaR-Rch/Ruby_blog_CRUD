@@ -11,7 +11,6 @@ class PostsController < ApplicationController
   end
 
   def show
-    @post = Post.includes(:user, :comments).find(params[:id])
     @comment = Comment.new
   end
 
@@ -21,13 +20,14 @@ class PostsController < ApplicationController
 
   def create
     @post = Post.new(post_params)
-    @post.user = User.first
+    @post.user = User.first || User.create!(email: "user@example.com", name: "User", role: "member")
 
     if @post.save
-      flash[:notice] = "Post was successfully created."
-      redirect_to @post
+      respond_to do |format|
+        format.turbo_stream
+        format.html { redirect_to @post, notice: "Post was successfully created." }
+      end
     else
-      flash.now[:alert] = "There was an error creating the post."
       render :new, status: :unprocessable_entity
     end
   end
@@ -47,15 +47,17 @@ class PostsController < ApplicationController
 
   def destroy
     @post.destroy
-    flash[:notice] = "Post was successfully deleted."
-    redirect_to posts_path
+    respond_to do |format|
+      format.turbo_stream
+      format.html { redirect_to posts_path, notice: "Post was successfully deleted." }
+    end
   end
 
   private
 
   def set_post
-    @post = Post.find(params[:id])
-    end
+    @post = Post.find_by!(slug: params[:id])
+  end
 
   def post_params
     params.require(:post).permit(:title, :body, :published_at)
