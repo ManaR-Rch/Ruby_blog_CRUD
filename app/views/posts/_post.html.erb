@@ -1,7 +1,37 @@
-<div>
-  <h2><%= link_to post.title, post %></h2>
-  <p><strong>By <%= post.user.name %></strong></p>
-  <p><%= truncate(post.body, length: 100) %></p>
-  <p><%= time_ago_in_words(post.published_at || post.created_at) %> ago</p>
-  <p><strong>Comments: <%= post.comments_count %></strong></p>
-</div>
+<turbo-frame id="post_<%= post.id %>">
+  <div class="bg-white rounded-lg shadow hover:shadow-lg transition-shadow overflow-hidden">
+    <div class="p-6">
+      <h2 class="text-2xl font-bold text-gray-900 mb-2">
+        <%= link_to post.title, post, class: "text-blue-600 hover:text-blue-800" %>
+      </h2>
+      
+      <p class="text-sm text-gray-600 mb-3">
+        <strong>By <%= post.user.name %></strong>
+        <span class="mx-2">•</span>
+        <span><%= time_ago_in_words(post.published_at || post.created_at) %> ago</span>
+      </p>
+
+      <% if post.published_at.present? %>
+        <span class="inline-block bg-green-100 text-green-800 text-xs font-semibold px-3 py-1 rounded-full mb-3">Published</span>
+      <% else %>
+        <span class="inline-block bg-yellow-100 text-yellow-800 text-xs font-semibold px-3 py-1 rounded-full mb-3">Draft</span>
+      <% end %>
+
+      <p class="text-gray-700 mb-4 line-clamp-3">
+        <%= truncate(post.body, length: 150) %>
+      </p>
+
+      <div class="flex items-center justify-between text-sm text-gray-600 border-t pt-4">
+        <span class="flex items-center gap-1">
+          💬 <strong><%= post.comments_count %></strong> <%= "comment".pluralize(post.comments_count) %>
+        </span>
+        
+        <div class="flex gap-3">
+          <%= link_to "View", post, class: "text-blue-600 hover:text-blue-800 font-semibold" %>
+          <%= link_to "Edit", edit_post_path(post), class: "text-orange-600 hover:text-orange-800 font-semibold" %>
+          <%= link_to "Delete", post, method: :delete, data: { turbo_confirm: "Are you sure?" }, class: "text-red-600 hover:text-red-800 font-semibold" %>
+        </div>
+      </div>
+    </div>
+  </div>
+</turbo-frame>
