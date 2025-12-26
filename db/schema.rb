@@ -10,28 +10,26 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2025_12_24_120005) do
+ActiveRecord::Schema[8.1].define(version: 2025_12_26_120006) do
   create_table "comments", force: :cascade do |t|
     t.text "body"
     t.datetime "created_at", null: false
     t.integer "post_id", null: false
     t.datetime "updated_at", null: false
     t.integer "user_id", null: false
-    t.index ["post_id", "created_at"], name: "index_comments_on_post_id_and_created_at"
     t.index ["post_id"], name: "index_comments_on_post_id"
     t.index ["user_id"], name: "index_comments_on_user_id"
   end
 
   create_table "posts", force: :cascade do |t|
-    t.integer "comments_count", default: 0, null: false
     t.text "body"
+    t.integer "comments_count", default: 0, null: false
     t.datetime "created_at", null: false
     t.datetime "published_at"
     t.string "slug"
     t.string "title"
     t.datetime "updated_at", null: false
     t.integer "user_id"
-    t.index ["user_id", "slug"], name: "index_posts_on_user_id_and_slug", unique: true
     t.index ["user_id"], name: "index_posts_on_user_id"
   end
 
@@ -39,9 +37,8 @@ ActiveRecord::Schema[8.1].define(version: 2025_12_24_120005) do
     t.datetime "created_at", null: false
     t.string "email", null: false
     t.string "name"
-    t.integer "role", default: 0, null: false
+    t.string "role", default: "member"
     t.datetime "updated_at", null: false
-    t.index ["email"], name: "index_users_on_email", unique: true
   end
 
   add_foreign_key "comments", "posts"

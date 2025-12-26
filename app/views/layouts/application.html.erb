@@ -23,14 +23,24 @@
     <%= javascript_importmap_tags %>
   </head>
 
-  <body>
-    <nav>
-    <%= link_to "Home", root_path %> |
-    <%= link_to "New Post", new_post_path %>
-  </nav>
-  <% flash.each do |key, message| %>
-  <div class="<%= key %>"><%= message %></div>
-  <% end %>
-    <%= yield %>
+  <body class="bg-gray-100">
+    <nav class="bg-white shadow-md">
+      <div class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
+        <div class="flex gap-4">
+          <%= link_to "Home", root_path, class: "text-blue-600 hover:text-blue-800 font-semibold" %>
+          <%= link_to "New Post", new_post_path, class: "text-blue-600 hover:text-blue-800 font-semibold" %>
+        </div>
+      </div>
+    </nav>
+
+    <div class="max-w-7xl mx-auto px-4 py-8">
+      <% flash.each do |key, message| %>
+        <div class="mb-4 p-4 rounded-lg <%= key == 'notice' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' %>">
+          <%= message %>
+        </div>
+      <% end %>
+
+      <%= yield %>
+    </div>
   </body>
 </html>

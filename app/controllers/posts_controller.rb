@@ -8,6 +8,11 @@ class PostsController < ApplicationController
     @posts = @posts.by_author(params[:author_id]) if params[:author_id].present?
     @posts = @posts.search(params[:q]) if params[:q].present?
     @posts = @posts.recent
+    
+    respond_to do |format|
+      format.turbo_stream { render :index }
+      format.html
+    end
   end
 
   def show
@@ -37,15 +42,17 @@ class PostsController < ApplicationController
 
   def update
     if @post.update(post_params)
-      flash[:notice] = "Post was successfully updated."
-      redirect_to @post
+      respond_to do |format|
+        format.turbo_stream { render :show }
+        format.html { redirect_to @post, notice: "Post was successfully updated." }
+      end
     else
-      flash.now[:alert] = "There was an error updating the post."
       render :edit, status: :unprocessable_entity
     end
   end
 
   def destroy
+    @post_id = @post.id
     @post.destroy
     respond_to do |format|
       format.turbo_stream

@@ -27,9 +27,9 @@
         </span>
         
         <div class="flex gap-3">
-          <%= link_to "View", post, class: "text-blue-600 hover:text-blue-800 font-semibold" %>
-          <%= link_to "Edit", edit_post_path(post), class: "text-orange-600 hover:text-orange-800 font-semibold" %>
-          <%= link_to "Delete", post, method: :delete, data: { turbo_confirm: "Are you sure?" }, class: "text-red-600 hover:text-red-800 font-semibold" %>
+          <%= link_to "View", post, class: "text-blue-600 hover:text-blue-800 font-semibold", data: { turbo: false } %>
+          <%= link_to "Edit", edit_post_path(post), class: "text-orange-600 hover:text-orange-800 font-semibold", data: { turbo_frame: "post_#{post.id}" } %>
+          <%= button_to "Delete", post, method: :delete, form: { data: { turbo_confirm: "Are you sure?" } }, class: "text-red-600 hover:text-red-800 font-semibold bg-none border-none p-0 cursor-pointer" %>
         </div>
       </div>
     </div>
