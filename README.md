@@ -11,18 +11,15 @@ A modern Rails blog application built step-by-step with Posts, Users, Comments, 
 
 ## 🎥 Demo
 
-<div align="center">
-  
-![Demo](./demo/demo.gif)
 
-*Application walkthrough showing posts, comments, and filtering features*
 
-</div>
+## 🎥 Demo
 
-> **Alternative:** If you prefer video format (.mp4), use this syntax:
-> ```markdown
-> https://github.com/user-attachments/assets/your-video-id.mp4
-> ```
+<video width="700" controls>
+  <source src="rubySreenVd.mp4" type="video/mp4">
+</video>
+
+
 
 ---
 
@@ -141,5 +138,6 @@ bin/rails test
 - ✅ Scopes, Filters, and Performance optimization
 
 ---
+
 
 **Built with ❤️ during Rails Bootcamp**
