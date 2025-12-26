@@ -9,6 +9,27 @@ A modern Rails blog application built step-by-step with Posts, Users, Comments, 
 
 ---
 
+## 🎥 Demo
+
+https://github.com/user-attachments/assets/rubySreenVd.mp4
+
+> **Note:** Replace `your-video-id-here` with your actual GitHub video URL after uploading
+
+### How to add your video:
+1. Create a folder `demo/` in your project root
+2. Add your screen recording (e.g., `demo.mp4`, `demo.gif`)
+3. Option 1 - Upload directly to GitHub:
+   - Go to any Issue or Pull Request
+   - Drag & drop your video file
+   - GitHub will upload it and give you a URL like: `https://github.com/user-attachments/assets/rubySreenVd.mp4`
+   - Copy that URL and replace the one above
+4. Option 2 - Use relative path (for GIF):
+   ```markdown
+   ![Demo](./demo/demo.gif)
+   ```
+
+---
+
 ## 🎯 Features
 
 ### Core Blog Functionality
