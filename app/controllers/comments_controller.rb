@@ -3,14 +3,14 @@ class CommentsController < ApplicationController
   before_action :set_comment, only: %i[destroy]
 
   def create
-    @comment = @post.comments.build(comment_params)
-    @comment.user = User.first
+    user = User.first
+    result = Comments::Create.call(user: user, post: @post, params: comment_params)
 
-    if @comment.save
+    if result.success?
       flash[:notice] = "Comment was successfully created."
       redirect_to @post
     else
-      flash.now[:alert] = "There was an error creating the comment."
+      flash[:alert] = friendly_comment_error(result.error)
       redirect_to @post, status: :unprocessable_entity
     end
   end
@@ -33,5 +33,16 @@ class CommentsController < ApplicationController
 
   def comment_params
     params.require(:comment).permit(:body)
+  end
+
+  def friendly_comment_error(code)
+    case code
+    when :invalid
+      "Comment cannot be blank or invalid."
+    when :spam_blocked
+      "Your comment looks like spam and was blocked."
+    else
+      "There was an error creating the comment."
+    end
   end
 end
