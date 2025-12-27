@@ -1,5 +1,5 @@
 class PostsController < ApplicationController
-  before_action :set_post, only: %i[show edit update destroy]
+  before_action :set_post, only: %i[show edit update destroy publish unpublish]
 
   def index
     @posts = Post.includes(:user, :comments).all
@@ -24,15 +24,19 @@ class PostsController < ApplicationController
   end
 
   def create
-    @post = Post.new(post_params)
-    @post.user = User.first || User.create!(email: "user@example.com", name: "User", role: "member")
+    user = User.first || User.create!(email: "user@example.com", name: "User", role: "member")
+    publish_now = post_params[:published_at].present?
+    result = Posts::Create.call(user: user, params: post_params, publish_now: publish_now)
 
-    if @post.save
+    if result.success?
+      @post = result.post
       respond_to do |format|
         format.turbo_stream
         format.html { redirect_to @post, notice: "Post was successfully created." }
       end
     else
+      @post = result.post || Post.new
+      flash.now[:alert] = result.error if result.error.present?
       render :new, status: :unprocessable_entity
     end
   end
@@ -57,6 +61,42 @@ class PostsController < ApplicationController
     respond_to do |format|
       format.turbo_stream
       format.html { redirect_to posts_path, notice: "Post was successfully deleted." }
+    end
+  end
+
+  def publish
+    user = User.first
+    unless user&.role == "admin"
+      respond_to do |format|
+        format.turbo_stream { head :forbidden }
+        format.html { redirect_to @post, alert: "Not authorized to publish." }
+      end
+      return
+    end
+
+    result = Posts::Publish.call(post: @post, publisher: user)
+
+    respond_to do |format|
+      format.turbo_stream { render :show }
+      format.html { redirect_to @post, notice: "Post published." }
+    end
+  end
+
+  def unpublish
+    user = User.first
+    unless user&.role == "admin"
+      respond_to do |format|
+        format.turbo_stream { head :forbidden }
+        format.html { redirect_to @post, alert: "Not authorized to unpublish." }
+      end
+      return
+    end
+
+    result = Posts::Unpublish.call(post: @post)
+
+    respond_to do |format|
+      format.turbo_stream { render :show }
+      format.html { redirect_to @post, notice: "Post unpublished." }
     end
   end
 
