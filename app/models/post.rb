@@ -1,5 +1,6 @@
 class Post < ApplicationRecord
   belongs_to :user
+  belongs_to :published_by, class_name: "User", optional: true
   has_many :comments, dependent: :destroy
 
   validates :title, presence: true, length: { minimum: 5, maximum: 120, message: "must be between 5 and 120 characters" }
