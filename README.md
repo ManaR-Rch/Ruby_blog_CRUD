@@ -11,24 +11,18 @@ A modern Rails blog application built step-by-step with Posts, Users, Comments, 
 
 ## 🎥 Demo
 
-<div align="center">
-  
-![Demo](./demo/demo.gif)
+## 🎥 Demo
 
-*Application walkthrough showing posts, comments, and filtering features*
-
-</div>
-
-> **Alternative:** If you prefer video format (.mp4), use this syntax:
-> ```markdown
-> https://github.com/user-attachments/assets/your-video-id.mp4
-> ```
+<video width="700" controls>
+  <source src="rubySreenVd.mp4" type="video/mp4">
+</video>
 
 ---
 
 ## 🎯 Features
 
 ### Core Blog Functionality
+
 - ✅ **Posts Management** - Create, read, update, delete posts
 - ✅ **User Association** - Each post belongs to a user
 - ✅ **Comments System** - Nested comments on posts with user association
@@ -37,6 +31,7 @@ A modern Rails blog application built step-by-step with Posts, Users, Comments, 
 - ✅ **Publishing Status** - Draft and published post states
 
 ### Queries & Performance 🚀
+
 - ✅ **Smart Scopes** - Composable query scopes for filtering
   - `published` - Show published posts only
   - `drafts` - Show draft posts only
@@ -62,24 +57,28 @@ A modern Rails blog application built step-by-step with Posts, Users, Comments, 
 ## 🚀 Installation & Setup
 
 ### 1. Clone the repository
+
 ```bash
 git clone https://github.com/ManaR-Rch/Ruby_blog_CRUD.git
 cd blog_bootcamp
 ```
 
 ### 2. Install dependencies
+
 ```bash
 bundle install
 yarn install
 ```
 
 ### 3. Setup the database
+
 ```bash
 bin/rails db:create
 bin/rails db:migrate
 ```
 
 ### 4. Start the server
+
 ```bash
 bin/dev
 ```
@@ -91,6 +90,7 @@ Visit `http://localhost:3000` in your browser.
 ## 🏗️ Architecture
 
 ### Models
+
 - **User**: has_many posts and comments
 - **Post**: belongs_to user, has_many comments with scopes
 - **Comment**: belongs_to post and user with counter_cache
@@ -100,6 +100,7 @@ Visit `http://localhost:3000` in your browser.
 ## 🔍 Advanced Features
 
 ### Smart Scopes
+
 - `Post.published` - Published posts only
 - `Post.drafts` - Draft posts only
 - `Post.recent` - Order by newest first
@@ -107,6 +108,7 @@ Visit `http://localhost:3000` in your browser.
 - `Post.search(query)` - Full-text search
 
 ### Performance Improvements
+
 - **N+1 Prevention**: Eager loading with includes
 - **Counter Cache**: Automatic comment counts stored in DB
 - **Composable Queries**: All filters work together
@@ -128,6 +130,7 @@ Visit `http://localhost:3000` in your browser.
 ---
 
 ## 🧪 Testing
+
 ```bash
 bin/rails test
 ```

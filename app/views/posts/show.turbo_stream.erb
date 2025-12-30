@@ -1,3 +1,17 @@
+<turbo-stream action="update" target="publish_status">
+  <template>
+    <div class="flex items-center gap-3">
+      <% if @post.published_at.present? %>
+        <span class="inline-block bg-green-100 text-green-800 text-xs font-semibold px-3 py-1 rounded-full">Published</span>
+        <%= button_to "Unpublish", unpublish_post_path(@post), method: :post, class: "text-sm bg-red-500 hover:bg-red-600 text-white font-semibold px-3 py-1 rounded transition", data: { turbo: true } %>
+      <% else %>
+        <span class="inline-block bg-yellow-100 text-yellow-800 text-xs font-semibold px-3 py-1 rounded-full">Draft</span>
+        <%= button_to "Publish", publish_post_path(@post), method: :post, class: "text-sm bg-green-500 hover:bg-green-600 text-white font-semibold px-3 py-1 rounded transition", data: { turbo: true } %>
+      <% end %>
+    </div>
+  </template>
+</turbo-stream>
+
 <turbo-stream action="update" target="post_<%= @post.id %>">
   <template>
     <turbo-frame id="post_<%= @post.id %>">
@@ -31,7 +45,7 @@
             <div class="flex gap-3">
               <%= link_to "View", @post, class: "text-blue-600 hover:text-blue-800 font-semibold", data: { turbo: false } %>
               <%= link_to "Edit", edit_post_path(@post), class: "text-orange-600 hover:text-orange-800 font-semibold", data: { turbo_frame: "post_#{@post.id}" } %>
-              <%= link_to "Delete", @post, method: :delete, data: { turbo_confirm: "Are you sure?" }, class: "text-red-600 hover:text-red-800 font-semibold" %>
+              <%= button_to "Delete", @post, method: :delete, data: { turbo_confirm: "Are you sure?" }, class: "text-red-600 hover:text-red-800 font-semibold bg-none border-none p-0 cursor-pointer" %>
             </div>
           </div>
         </div>

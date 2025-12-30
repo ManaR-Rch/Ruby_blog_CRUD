@@ -9,7 +9,6 @@ module Posts
     def call
       post = @user.posts.build(filtered_params)
 
-      # Ensure slug is set based on title; model also handles this via callback.
       post.slug ||= post.title.to_s.parameterize.presence
 
       post.published_at = Time.current if @publish_now

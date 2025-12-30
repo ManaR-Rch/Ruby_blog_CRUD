@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2025_12_26_120006) do
+ActiveRecord::Schema[8.1].define(version: 2025_12_29_120008) do
   create_table "comments", force: :cascade do |t|
     t.text "body"
     t.datetime "created_at", null: false
@@ -26,22 +26,30 @@ ActiveRecord::Schema[8.1].define(version: 2025_12_26_120006) do
     t.integer "comments_count", default: 0, null: false
     t.datetime "created_at", null: false
     t.datetime "published_at"
+    t.integer "published_by_id"
     t.string "slug"
     t.string "title"
     t.datetime "updated_at", null: false
     t.integer "user_id"
+    t.index ["published_by_id"], name: "index_posts_on_published_by_id"
     t.index ["user_id"], name: "index_posts_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
     t.datetime "created_at", null: false
-    t.string "email", null: false
+    t.string "email"
+    t.string "encrypted_password", default: "", null: false
     t.string "name"
+    t.datetime "remember_created_at"
+    t.datetime "reset_password_sent_at"
+    t.string "reset_password_token"
     t.string "role", default: "member"
     t.datetime "updated_at", null: false
+    t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
   add_foreign_key "comments", "posts"
   add_foreign_key "comments", "users"
   add_foreign_key "posts", "users"
+  add_foreign_key "posts", "users", column: "published_by_id"
 end

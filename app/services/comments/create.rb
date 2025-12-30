@@ -19,7 +19,6 @@ module Comments
       ActiveRecord::Base.transaction do
         comment = @post.comments.build(body: body, user: @user)
         comment.save!
-        # counter_cache increments automatically due to the association option
       end
 
       Result.success(post: comment)
