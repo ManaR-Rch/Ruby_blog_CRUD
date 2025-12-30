@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require_relative '../../app/policies/application_policy'
+
 ActionPolicy::Base.default_policy = ApplicationPolicy
 
   # Use the method `policy` to find a policy class
