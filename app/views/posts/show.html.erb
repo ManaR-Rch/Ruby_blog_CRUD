@@ -1,22 +1,56 @@
-<h1><%= @post.title %></h1>
-<p><strong>By <%= @post.user.name %></strong></p>
-<p><%= @post.body %></p>
-<p>Published: <%= time_ago_in_words(@post.published_at || @post.created_at) %> ago</p>
+<div id="post_header" class="mb-8 pb-6 border-b border-gray-300">
+  <h1 class="text-4xl font-bold text-gray-900 mb-4"><%= @post.title %></h1>
+  
+  <div class="flex items-center justify-between mb-4">
+    <p class="text-gray-600"><strong>By <%= @post.user.name %></strong></p>
+    <% if allowed_to?(:publish?, @post) %>
+      <div id="publish_status" class="flex items-center gap-3">
+        <% if @post.published_at.present? %>
+          <span class="inline-block bg-green-100 text-green-800 text-xs font-semibold px-3 py-1 rounded-full">Published</span>
+          <%= button_to "Unpublish", unpublish_post_path(@post), method: :post, class: "text-sm bg-red-500 hover:bg-red-600 text-white font-semibold px-3 py-1 rounded transition", data: { turbo: true } %>
+        <% else %>
+          <span class="inline-block bg-yellow-100 text-yellow-800 text-xs font-semibold px-3 py-1 rounded-full">Draft</span>
+          <%= button_to "Publish", publish_post_path(@post), method: :post, class: "text-sm bg-green-500 hover:bg-green-600 text-white font-semibold px-3 py-1 rounded transition", data: { turbo: true } %>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
 
-<h2>Comments (<%= @post.comments_count %>)</h2>
-<div id="comments">
+  <p class="text-sm text-gray-500">
+    <%= time_ago_in_words(@post.published_at || @post.created_at) %> ago
+  </p>
+</div>
+
+<div class="prose max-w-none mb-8">
+  <%= simple_format(@post.body) %>
+</div>
+
+<h2 class="text-2xl font-bold text-gray-900 mb-4">Comments (<%= @post.comments_count %>)</h2>
+<div id="comments" class="mb-8">
   <% if @post.comments.any? %>
     <% @post.comments.order(created_at: :desc).each do |comment| %>
       <%= render "comments/comment", comment: comment %>
     <% end %>
   <% else %>
-    <p>No comments yet.</p>
+    <p class="text-gray-600">No comments yet.</p>
   <% end %>
 </div>
 
-<h3>Add a Comment</h3>
-<%= render "comments/form" %>
+<% if user_signed_in? %>
+  <h3 class="text-xl font-bold text-gray-900 mb-4">Add a Comment</h3>
+  <%= render "comments/form" %>
+<% else %>
+  <div class="bg-blue-100 border border-blue-300 text-blue-800 px-4 py-3 rounded mb-4">
+    <p><%= link_to "Sign in", new_user_session_path, class: "font-semibold text-blue-600 hover:text-blue-800" %> to add a comment.</p>
+  </div>
+<% end %>
 
-<%= link_to "Edit", edit_post_path(@post) %> |
-<%= link_to "Back", posts_path %> |
-<%= button_to "Delete", @post, method: :delete, data: { confirm: "Are you sure?" } %>
+<div class="mt-8 pt-6 border-t border-gray-300 flex gap-3">
+  <% if allowed_to?(:update?, @post) %>
+    <%= link_to "Edit", edit_post_path(@post), class: "text-orange-600 hover:text-orange-800 font-semibold" %>
+  <% end %>
+  <%= link_to "Back", posts_path, class: "text-blue-600 hover:text-blue-800 font-semibold" %>
+  <% if allowed_to?(:destroy?, @post) %>
+    <%= button_to "Delete", @post, method: :delete, data: { turbo_confirm: "Are you sure?" }, class: "text-red-600 hover:text-red-800 font-semibold bg-none border-none p-0 cursor-pointer" %>
+  <% end %>
+</div>

@@ -1,4 +1,6 @@
 class ApplicationController < ActionController::Base
+  include ActionPolicy::Controller
+
   # Only allow modern browsers supporting webp images, web push, badges, import maps, CSS nesting, and CSS :has.
   allow_browser versions: :modern
 
@@ -7,6 +9,10 @@ class ApplicationController < ActionController::Base
 
   before_action :store_user_location!, if: :storable_location?
   helper_method :current_user
+
+  rescue_from ActionPolicy::Unauthorized do |exception|
+    redirect_to root_path, alert: "You are not authorized to perform this action."
+  end
 
   private
 

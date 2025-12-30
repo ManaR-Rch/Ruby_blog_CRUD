@@ -28,7 +28,21 @@
       <div class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
         <div class="flex gap-4">
           <%= link_to "Home", root_path, class: "text-blue-600 hover:text-blue-800 font-semibold" %>
-          <%= link_to "New Post", new_post_path, class: "text-blue-600 hover:text-blue-800 font-semibold" %>
+          <% if user_signed_in? %>
+            <%= link_to "New Post", new_post_path, class: "text-blue-600 hover:text-blue-800 font-semibold" %>
+          <% end %>
+        </div>
+        <div class="flex gap-4 items-center">
+          <% if user_signed_in? %>
+            <span class="text-gray-600"><%= current_user.name %></span>
+            <% if current_user.admin? %>
+              <span class="text-xs bg-red-100 text-red-800 px-2 py-1 rounded">Admin</span>
+            <% end %>
+            <%= button_to "Sign Out", destroy_user_session_path, method: :delete, class: "text-red-600 hover:text-red-800 font-semibold" %>
+          <% else %>
+            <%= link_to "Sign In", new_user_session_path, class: "text-blue-600 hover:text-blue-800 font-semibold" %>
+            <%= link_to "Sign Up", new_user_registration_path, class: "text-blue-600 hover:text-blue-800 font-semibold" %>
+          <% end %>
         </div>
       </div>
     </nav>

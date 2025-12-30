@@ -11,11 +11,13 @@
         <span><%= time_ago_in_words(post.published_at || post.created_at) %> ago</span>
       </p>
 
-      <% if post.published_at.present? %>
-        <span class="inline-block bg-green-100 text-green-800 text-xs font-semibold px-3 py-1 rounded-full mb-3">Published</span>
-      <% else %>
-        <span class="inline-block bg-yellow-100 text-yellow-800 text-xs font-semibold px-3 py-1 rounded-full mb-3">Draft</span>
-      <% end %>
+      <div id="post_status_<%= post.id %>" class="flex items-center gap-2 mb-3">
+        <% if post.published_at.present? %>
+          <span class="inline-block bg-green-100 text-green-800 text-xs font-semibold px-3 py-1 rounded-full">Published</span>
+        <% else %>
+          <span class="inline-block bg-yellow-100 text-yellow-800 text-xs font-semibold px-3 py-1 rounded-full">Draft</span>
+        <% end %>
+      </div>
 
       <p class="text-gray-700 mb-4 line-clamp-3">
         <%= truncate(post.body, length: 150) %>
@@ -28,8 +30,12 @@
         
         <div class="flex gap-3">
           <%= link_to "View", post, class: "text-blue-600 hover:text-blue-800 font-semibold", data: { turbo: false } %>
-          <%= link_to "Edit", edit_post_path(post), class: "text-orange-600 hover:text-orange-800 font-semibold", data: { turbo_frame: "post_#{post.id}" } %>
-          <%= button_to "Delete", post, method: :delete, form: { data: { turbo_confirm: "Are you sure?" } }, class: "text-red-600 hover:text-red-800 font-semibold bg-none border-none p-0 cursor-pointer" %>
+          <% if allowed_to?(:update?, post) %>
+            <%= link_to "Edit", edit_post_path(post), class: "text-orange-600 hover:text-orange-800 font-semibold", data: { turbo_frame: "post_#{post.id}" } %>
+          <% end %>
+          <% if allowed_to?(:destroy?, post) %>
+            <%= button_to "Delete", post, method: :delete, form: { data: { turbo_confirm: "Are you sure?" } }, class: "text-red-600 hover:text-red-800 font-semibold bg-none border-none p-0 cursor-pointer" %>
+          <% end %>
         </div>
       </div>
     </div>
